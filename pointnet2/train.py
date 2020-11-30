@@ -34,9 +34,9 @@ def main(cfg):
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
         monitor="val_acc",
         mode="max",
-        save_top_k=2,
+        save_top_k=-1,
         filepath=os.path.join(
-            cfg.task_model.name, "{epoch}-{val_loss:.2f}-{val_acc:.3f}"
+            cfg.task_model.name, "{epoch}-{val_loss:.2f}-{val_acc:.3f}-{mean_per_cls_acc:.3f}"
         ),
         verbose=True,
     )
