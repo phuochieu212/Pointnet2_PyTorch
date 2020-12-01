@@ -146,7 +146,7 @@ class PointNet2ClassificationSSG(pl.LightningModule):
         groupby_gt = results.groupby("gt")["TP"]
         mean_per_cls_acc = groupby_gt.sum() / groupby_gt.count()
 
-        return dict(val_loss=loss, val_acc=acc, mean_per_cls_acc=mean_per_cls_acc.mean().item())
+        return dict(val_loss=loss, val_acc=acc, mean_per_cls_acc=torch.tensor(mean_per_cls_acc.mean())
 
     def validation_end(self, outputs):
         reduced_outputs = {}
