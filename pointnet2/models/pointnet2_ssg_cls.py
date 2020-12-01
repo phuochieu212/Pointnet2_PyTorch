@@ -142,8 +142,11 @@ class PointNet2ClassificationSSG(pl.LightningModule):
         loss = F.cross_entropy(logits, labels)
         preds = torch.argmax(logits, dim=1)
         acc = (preds == labels).float().mean()
+        results = pd.DataFrame({"pred" : preds.cpu().numpy(), "gt": labels.cpu().numpy(), "TP": (preds == labels).cpu().numpy()})
+        groupby_gt = results.groupby("gt")["TP"]
+        mean_per_cls_acc = groupby_gt.sum() / groupby_gt.count()
 
-        return dict(val_loss=loss, val_acc=acc)
+        return dict(val_loss=loss, val_acc=acc, mean_per_cls_acc=mean_per_cls_acc.mean().item())
 
     def validation_end(self, outputs):
         reduced_outputs = {}
